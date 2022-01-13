@@ -1,0 +1,106 @@
+buildscript {
+    repositories {
+        mavenLocal()
+        mavenCentral()
+
+        maven { url "https://maven.minecraftforge.net/" }
+        maven { url "https://plugins.gradle.org/m2" }
+        maven { url "https://jitpack.io" }
+        maven { url "https://repo.spongepowered.org/maven/" }
+    }
+
+    dependencies {
+        classpath "com.github.asbyth:ForgeGradle:6f53277"
+        classpath group: "com.github.xcfrg", name: "MixinGradle", version: "0.6-SNAPSHOT"
+        classpath group: "com.github.jengelman.gradle.plugins", name: "shadow", version: "4.0.4"
+    }
+}
+
+apply plugin: "java"
+apply plugin: "net.minecraftforge.gradle.forge"
+apply plugin: "org.spongepowered.mixin"
+apply plugin: "com.github.johnrengelman.shadow"
+
+group "win.senoe.forgespoof"
+version "1.0"
+archivesBaseName = "ForgeSpoof"
+
+sourceCompatibility = targetCompatibility = 1.8
+
+minecraft {
+    version = "1.8.9-11.15.1.2318-1.8.9"
+    runDir = "run"
+    mappings = "stable_22"
+    clientJvmArgs.addAll(["-Dfml.coreMods.load=win.senoe.forgespoof.forge.MixinLoader"])
+    makeObfSourceJar = true
+}
+
+repositories {
+    mavenLocal()
+    mavenCentral()
+    jcenter()
+
+    maven { url "https://jitpack.io" }
+    maven { url "https://repo.spongepowered.org/maven/" }
+}
+
+dependencies {
+    annotationProcessor "org.spongepowered:mixin:0.7.11-SNAPSHOT"
+    compile("org.spongepowered:mixin:0.7.11-SNAPSHOT")
+}
+
+processResources {
+    inputs.property "version", "1.0"
+    inputs.property "mcversion", project.minecraft.version
+
+    from(sourceSets.main.resources.srcDirs) {
+        exclude "mcmod.info"
+    }
+    rename '(.+_at.cfg)', 'META-INF/$1'
+}
+
+shadowJar {
+    exclude "GradleStart**"
+    exclude ".cache"
+    exclude "tv.twitch:twitch"
+    dependencies {
+        include(dependency("org.spongepowered:mixin"))
+    }
+    exclude "LICENSE.txt"
+    exclude "dummyThing"
+    classifier = ""
+}
+
+mixin {
+    add sourceSets.main, "mixins.forgespoof.refmap.json"
+}
+
+reobf {
+    shadowJar {
+        mappingType = "SEARGE"
+        classpath = sourceSets.main.compileClasspath
+    }
+}
+
+configurations {
+    shade
+    external
+    compile.extendsFrom shade
+}
+
+build {
+    clean
+    build
+    shadowJar
+    reobf
+}
+
+jar {
+    manifest.attributes(
+            "ForceLoadAsMod": true,
+            "FMLCorePluginContainsFMLMod": true,
+            "TweakClass": "org.spongepowered.asm.launch.MixinTweaker",
+            "FMLCorePlugin": "win.senoe.forgespoof.forge.MixinLoader",
+            "MixinConfigs": "mixins.forgespoof.json"
+    )
+}

@@ -1,0 +1,9 @@
+{
+  "required": true,
+  "compatibilityLevel": "JAVA_8",
+  "package": "win.senoe.forgespoof.mixins",
+  "refmap": "mixins.forgespoof.refmap.json",
+  "mixins": [
+    "MixinModList"
+  ]
+}
