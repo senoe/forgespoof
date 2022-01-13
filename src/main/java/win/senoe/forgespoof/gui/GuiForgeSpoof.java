@@ -76,5 +76,5 @@ public class GuiForgeSpoof extends GuiScreen {
     public boolean doesGuiPauseGame() {
         return false;
     }
-    
+
 }
