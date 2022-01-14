@@ -2,7 +2,7 @@
   {
     "modid": "forgespoof",
     "name": "ForgeSpoof",
-    "description": "Removes Forge mod IDs from the mod list sent to servers.",
+    "description": "A mod that removes mod IDs from the mod list Forge sends to servers.",
     "version": "1.0",
     "mcversion": "1.8.9",
     "url": "https://mods.senoe.win/mods/forgespoof",
@@ -10,7 +10,7 @@
     "authorList": [
       "senoe"
     ],
-    "credits": "senoe",
+    "credits": "senoe, __fastcall (for mixin)",
     "logoFile": "",
     "screenshots": [],
     "dependencies": []

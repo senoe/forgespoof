@@ -19,8 +19,12 @@ public class MixinModList extends FMLHandshakeMessage {
     @Shadow(remap = false)
     private Map<String, String> modTags;
 
+    /**
+     * @author __fastcall
+     * @see net.minecraftforge.fml.common.network.handshake.FMLHandshakeMessage
+     */
     @Inject(method = "<init>(Ljava/util/List;)V", at = @At("RETURN"), remap = false)
-    private void removeModids(List<ModContainer> modList, CallbackInfo ci) {
+    private void removeIds(List<ModContainer> modList, CallbackInfo ci) {
         if (!Minecraft.getMinecraft().isSingleplayer() && !ForgeSpoof.modIds.isEmpty()) {
             ForgeSpoof.LOGGER.info("Removing modids...");
             this.modTags.keySet().removeIf(key -> ForgeSpoof.modIds.stream().anyMatch(key::equalsIgnoreCase));
